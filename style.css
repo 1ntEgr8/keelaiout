@@ -1,0 +1,90 @@
+@import url('https://rsms.me/inter/inter.css');
+html { font-family: 'Inter', sans-serif; }
+@supports (font-variation-settings: normal) {
+  html { font-family: 'Inter var', sans-serif; }
+}
+
+body {
+    margin: 0;
+    --primary: #64ffda;
+    --primary-dark: #14cba8;
+    --primary-light: #9effff;
+    --secondary: #00e5ff;
+    --secondary-light: #6effff;
+    --secondary-dark: #00b2cc;
+    --prompt: #7a76de;
+}
+
+.title, .stats, .prompt, .battleground, .the-end {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    background: var(--secondary);
+    color: white;
+    border-bottom: 10px solid var(--primary-light);
+    height: 10vh;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+}
+
+.bar {
+    padding: 0 5% 0 5%;
+    height: 5vh;
+}
+
+.where-the-action-happens {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 55vh;
+    padding: 0 10% 0 10%;
+}
+
+.the-rules {
+    text-align: center;
+    height: 16vh;
+}
+
+.the-end {
+    height: 10vh;
+    background: var(--primary);
+}
+
+button {
+    background: var(--primary);
+    height: 50%;
+    border-radius: 100%;
+    border: 2px solid #000000;
+    padding: 7px;
+    cursor: pointer;
+}
+
+button:active {
+    background: var(--primary-light);
+    transform: scale(1.1, 1.1);
+}
+
+#battleground {
+    height: 100px;
+    width: 90%;
+    padding: 1rem;
+    margin: 5rem 0 2rem 0;
+    font-family: "Inter", monospace;
+    font-size: 2rem;
+    outline: 0.25rem black solid;
+}
+
+#battleground:focus {
+    outline: 0.5rem orange solid;
+}
+
+#prompt {
+    color: var(--prompt);
+}
