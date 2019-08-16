@@ -1,14 +1,6 @@
 const battleground = document.getElementById("battleground");
 let isShift = false,
-    oldLen = 0,
-    score = 1;
-
-// todos:
-// how are points decided?
-    // decide what the multipliers are 
-    // then increment based on the correct ones
-// for time, you get a multiplier on your points
-// publish the game
+    oldLen = 0;
 
 // QWERTY to DVORAK key mappings
 const QWERTYTODVORAK = {
@@ -84,6 +76,10 @@ const QWERTYTOCOLEMAK = {
 }
 
 battleground.addEventListener("input", (e) => {
+    if (!gameStart) {
+        startTimer();
+        gameStart = true;
+    }
     let textContent = e.target.value,
         characterTyped = textContent[textContent.length - 1];
     if (oldLen < textContent.length) {
@@ -91,6 +87,11 @@ battleground.addEventListener("input", (e) => {
         e.target.value = textContent.substring(0, textContent.length - 1) + newChar;
     }
     oldLen = textContent.length;
+    checkAnswer(e.target.value);
+    if (isGameOver()) {
+        gameStart = false;
+        reset();
+    }
 })
 
 battleground.addEventListener("keydown", (e) => {
@@ -129,4 +130,8 @@ function mapToLayout(c, to) {
     } else {
         return c;
     }
+}
+
+function clearBattleground() {
+    battleground.value = "";
 }
