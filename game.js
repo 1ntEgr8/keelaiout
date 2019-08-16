@@ -137,7 +137,7 @@ function postGame() {
     points += (livesLeft * LIVES_MULTIPLIER);
     hearts.style.display = "none";
     gameText.style.display = "block";
-    gameText.innerHTML = `GAME OVER! Your score ${points}`;
+    gameText.innerHTML = `GAME OVER! Your score is ${points}`;
     level.attributes.value.nodeValue = 100;
 }
 

@@ -124,7 +124,8 @@ battleground.addEventListener("input", (e) => {
 
 // used for toggling isShift to decide if key combo characters need to be displayed
 battleground.addEventListener("keydown", (e) => {
-    if (e.shiftKey || (e.key == e.key.toUpperCase() && e.key.match(/[a-z]/))) {
+    if (e.shiftKey || (e.key == e.key.toUpperCase() && e.key.match(/[A-Z]/))) {
+        console.log("checking is yes");
         isShift = true;
     } else {
         isShift = false;
