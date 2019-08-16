@@ -86,8 +86,10 @@ function isGameOver(ans="") {
 }
 
 function removeHeart() {
-    document.getElementById(`heart-${livesLeft}`).style.color = "white";
-    livesLeft--;
+    if (livesLeft > 0) {
+        document.getElementById(`heart-${livesLeft}`).style.color = "white";
+        livesLeft--;
+    }
 }
 
 function changeLifeLevel(i=0) {
@@ -112,6 +114,7 @@ function postGame() {
     hearts.style.display = "none";
     gameText.style.display = "block";
     gameText.innerHTML = `GAME OVER! Your score ${points}`;
+    level.attributes.value.nodeValue = 100;
 }
 
 function resetHearts() {
@@ -128,8 +131,8 @@ function start() {
 
 function stop() {
     stopTimer();
-    postGame();
     clearInterval(progressTimer);
+    postGame();
 }
 
 setPhrase();
