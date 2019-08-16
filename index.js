@@ -1,13 +1,21 @@
-const battleground = document.getElementById("battleground"),
-      keyMapping = document.getElementById("key-mapping");
-let isShift = false,
-    oldLen = 0
-    currentMapping = "DVORAK";
+const battleground = document.getElementById("battleground"), // the textarea where all the action happens
+      keyMapping = document.getElementById("key-mapping"); // the key mapping hint provided at the bottom
+let isShift = false, // used to decide if key combo characters need to be displayed
+    oldLen = 0, // used to prevent the last character from changing based on keymapping when backspacing
+    currentMapping = "DVORAK", // default keyboard layout mapping
+    currentMappingList;
 
+// list of accepted mappings, 
+// UPDATE THIS IF YOU ADD NEW MAPPINGS TO THE GAME
+// ALSO UPDATE THE SWITCH STATEMENT IN changeKeyMapping()
 const acceptedMappings = [
     "DVORAK",
     "COLEMAK"
 ];
+
+/* ======== KEY MAPPINGS START ======== */
+// consider moving these to another file
+// FOLLOW THE SAME FORMAT AS THE OTHER MAPPINGS WHEN CREATING A NEW ONE
 
 // QWERTY to DVORAK key mappings
 const QWERTYTODVORAK = {
@@ -81,18 +89,23 @@ const QWERTYTOCOLEMAK = {
     ":": "O",
     "n": "k"
 }
+/* ======== KEY MAPPINGS END ======== */
 
+// handles changing displayed character to the keyboard layout for the game
 battleground.addEventListener("input", (e) => {
+    // starts the game if it hasn't begun
     if (!gameStart) {
         currentMapping = acceptedMappings[Math.floor(Math.random() * acceptedMappings.length)];
-        changeKeyMappingText(currentMapping);
+        changeKeyMapping(currentMapping);
         start();
         startTimer();
         gameStart = true;
     }
+    // don't want to do conversions if the game if over
     if (livesLeft == 0) {
         return;
     }
+    /* === CHARACTER CONVERSION TO CHOSEN LAYOUT START === */
     let textContent = e.target.value,
         characterTyped = textContent[textContent.length - 1];
     if (oldLen < textContent.length) {
@@ -100,15 +113,19 @@ battleground.addEventListener("input", (e) => {
         e.target.value = textContent.substring(0, textContent.length - 1) + newChar;
     }
     oldLen = textContent.length;
+    /* === CHARACTER CONVERSION TO CHOSEN LAYOUT END === */
+    
+    // checks the answer, and updates the score
     checkAnswer(e.target.value);
+
+    // checking if the game is over
     if (isGameOver()) {
-        currentMapping = acceptedMappings[Math.floor(Math.random() * acceptedMappings.length)];
-        gameStart = false;
-        changeKeyMappingText("");
+        changeKeyMappingText("Don't give up :)");
         stop();
     }
 })
 
+// used for toggling isShift to decide if key combo characters need to be displayed
 battleground.addEventListener("keydown", (e) => {
     if (e.shiftKey || (e.key == e.key.toUpperCase() && e.key.match(/[a-z]/))) {
         isShift = true;
@@ -117,21 +134,17 @@ battleground.addEventListener("keydown", (e) => {
     }
 })
 
+// maps a character "c" to the layout "to"
 function mapToLayout(c, to) {
-    let layoutMapping;
-    switch(to) {
-        case "DVORAK": layoutMapping = QWERTYTODVORAK; break;
-        case "COLEMAK": layoutMapping = QWERTYTOCOLEMAK; break;
-        default: {console.error(`QWERTY to ${to} is not supported yet`); return;};
-    }
+    // checking if a key combo character needs to be displayed
     if (isShift) {
-        let mappings = Object.keys(layoutMapping)
+        let mappings = Object.keys(currentMapping)
                                 .filter(value => value.includes("special"))
                                 .map( value => value[value.length - 1]);
         if (mappings.includes(c.toLowerCase())) {
-            return layoutMapping[`special${c.toLowerCase()}`]
+            return currentMapping[`special${c.toLowerCase()}`]
         } else {
-            let val = layoutMapping[c.toLowerCase()];
+            let val = currentMapping[c.toLowerCase()];
             if (val) {
                 return val.toUpperCase();
             } else {
@@ -139,7 +152,7 @@ function mapToLayout(c, to) {
             }
         }
     }
-    let val = layoutMapping[c];
+    let val = currentMapping[c];
     if (val) {
         return val;
     } else {
@@ -147,14 +160,17 @@ function mapToLayout(c, to) {
     }
 }
 
+// clears the battleground aka textarea
 function clearBattleground() {
     battleground.value = "";
 }
 
-function changeKeyMappingText(s) {
+// changes the current key mapping
+function changeKeyMapping(s) {
     keyMapping.innerHTML = s;
+    switch(to) {
+        case "DVORAK": currentMapping = QWERTYTODVORAK; break;
+        case "COLEMAK": currentMapping = QWERTYTOCOLEMAK; break;
+        default: {console.error(`QWERTY to ${to} has not been added as a case in the switch statment or isn't supported yet`); return;};
+    }
 }
-
-/*
-    the last part is to add the lives feature, and you will be done!!!!
-*/
