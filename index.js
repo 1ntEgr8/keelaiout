@@ -2,8 +2,8 @@ const battleground = document.getElementById("battleground"), // the textarea wh
       keyMapping = document.getElementById("key-mapping"); // the key mapping hint provided at the bottom
 let isShift = false, // used to decide if key combo characters need to be displayed
     oldLen = 0, // used to prevent the last character from changing based on keymapping when backspacing
-    currentMapping = "DVORAK", // default keyboard layout mapping
-    currentMappingList;
+    currentMappingText = "DVORAK", // default keyboard layout mapping
+    currentMapping;
 
 // list of accepted mappings, 
 // UPDATE THIS IF YOU ADD NEW MAPPINGS TO THE GAME
@@ -95,33 +95,30 @@ const QWERTYTOCOLEMAK = {
 battleground.addEventListener("input", (e) => {
     // starts the game if it hasn't begun
     if (!gameStart) {
-        currentMapping = acceptedMappings[Math.floor(Math.random() * acceptedMappings.length)];
-        changeKeyMapping(currentMapping);
+        currentMappingText = acceptedMappings[Math.floor(Math.random() * acceptedMappings.length)];
+        changeKeyMapping(currentMappingText);
         start();
         startTimer();
         gameStart = true;
-    }
-    // don't want to do conversions if the game if over
-    if (livesLeft == 0) {
-        return;
     }
     /* === CHARACTER CONVERSION TO CHOSEN LAYOUT START === */
     let textContent = e.target.value,
         characterTyped = textContent[textContent.length - 1];
     if (oldLen < textContent.length) {
-        const newChar = mapToLayout(characterTyped, currentMapping);
+        const newChar = mapToLayout(characterTyped);
         e.target.value = textContent.substring(0, textContent.length - 1) + newChar;
     }
     oldLen = textContent.length;
     /* === CHARACTER CONVERSION TO CHOSEN LAYOUT END === */
     
-    // checks the answer, and updates the score
-    checkAnswer(e.target.value);
+    if (livesLeft > 0) {
+        // checks the answer, and updates the score
+        checkAnswer(e.target.value);
 
-    // checking if the game is over
-    if (isGameOver()) {
-        changeKeyMappingText("Don't give up :)");
-        stop();
+        // checking if the game is over
+        if (isGameOver()) {
+            stop();
+        }
     }
 })
 
@@ -135,7 +132,7 @@ battleground.addEventListener("keydown", (e) => {
 })
 
 // maps a character "c" to the layout "to"
-function mapToLayout(c, to) {
+function mapToLayout(c) {
     // checking if a key combo character needs to be displayed
     if (isShift) {
         let mappings = Object.keys(currentMapping)
@@ -166,8 +163,8 @@ function clearBattleground() {
 }
 
 // changes the current key mapping
-function changeKeyMapping(s) {
-    keyMapping.innerHTML = s;
+function changeKeyMapping(to) {
+    keyMapping.innerHTML = to;
     switch(to) {
         case "DVORAK": currentMapping = QWERTYTODVORAK; break;
         case "COLEMAK": currentMapping = QWERTYTOCOLEMAK; break;

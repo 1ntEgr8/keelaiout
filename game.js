@@ -3,7 +3,7 @@ const prompt = document.getElementById("prompt"), // the phrase that needs to be
       restart = document.getElementById("restart"),
       gameText = document.getElementById("game-text"), // game over text div
       hearts = document.getElementById("hearts"),
-      level = document.getElementById("level"),; // progress bar
+      level = document.getElementById("level"); // progress bar
 
 /*
     Changing these variables will alter the scoring system and difficulty of the game
@@ -31,6 +31,7 @@ const phrases = [
 ];
 
 restart.addEventListener("click", () => {
+    setPhrase(); // comment this line if you don't want a new phrase upon restart
     reset();
 });
 
@@ -133,7 +134,7 @@ function changeLifeLevel(i=0) {
 
 // does the things that are needed post game over
 function postGame() {
-    points += (livesLeft) * LIVES_MULTIPLIER;
+    points += (livesLeft * LIVES_MULTIPLIER);
     hearts.style.display = "none";
     gameText.style.display = "block";
     gameText.innerHTML = `GAME OVER! Your score ${points}`;
