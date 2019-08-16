@@ -45,8 +45,17 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 55vh;
+    height: 45vh;
     padding: 0 10% 0 10%;
+}
+
+.lives {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 10vh;
+    font-size: 2rem;
+    color: red;
 }
 
 .the-rules {

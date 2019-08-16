@@ -1,11 +1,19 @@
 const prompt = document.getElementById("prompt"),
       score = document.getElementById("score"),
-      restart = document.getElementById("restart");
+      restart = document.getElementById("restart"),
+      gameText = document.getElementById("game-text"),
+      hearts = document.getElementById("hearts"),
+      level = document.getElementById("level");
+const MAXPOINTS = 100,
+      INCREMENT = 10,
+      LEVEL_DECREMENT = 10,
+      LIVES_MULTIPLIER = 100;
+
 let phrase,
     points = 0,
-    gameStart = false;
-const MAXPOINTS = 100,
-      INCREMENT = 10;
+    gameStart = false,
+    livesLeft = hearts.children.length,
+    progressTimer;
 
 const phrases = [
     "JavaScript does prototypical inheritance",
@@ -20,8 +28,10 @@ restart.addEventListener("click", () => {
 function reset() {
     clearBattleground()
     updateScore(0);
-    stopTimer();
     resetTimer();
+    resetHearts();
+    changeLifeLevel(100);
+    livesLeft = 3;
     gameStart = false;
 }
 
@@ -64,14 +74,62 @@ function calculatePoints(response, correctAnswer) {
     let diff = response.charCodeAt(0) - correctAnswer.charCodeAt(0);
     for (let i = MAXPOINTS; i >= 0; i-=INCREMENT) {
         if (Math.abs(diff) <= (MAXPOINTS - i)) {
+            changeLifeLevel(i);
             return i;
         }
     }
     return 0;
 }
 
-function isGameOver(ans) {
-    return ans == phrase;
+function isGameOver(ans="") {
+    return livesLeft == 0 || ans == phrase;
+}
+
+function removeHeart() {
+    document.getElementById(`heart-${livesLeft}`).style.color = "white";
+    livesLeft--;
+}
+
+function changeLifeLevel(i=0) {
+    let currentValue = parseInt(level.attributes.value.nodeValue),
+        newValue = currentValue - LEVEL_DECREMENT;
+    if (i >= 70) {
+        newValue = currentValue + (Math.abs(i) / 10);
+        if (newValue >= 100) {
+            newValue = 100;
+        }
+    }
+    if (currentValue <= 0) {
+        removeHeart();
+        newValue = 100;
+        if (isGameOver()) stop();
+    }
+    level.attributes.value.nodeValue = newValue;
+}
+
+function postGame() {
+    points += (livesLeft) * LIVES_MULTIPLIER;
+    hearts.style.display = "none";
+    gameText.style.display = "block";
+    gameText.innerHTML = `GAME OVER! Your score ${points}`;
+}
+
+function resetHearts() {
+    gameText.style.display = "none";
+    hearts.style.display ="block";
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById(`heart-${i}`).style.color = "red";
+    }
+}
+
+function start() {
+    progressTimer = setInterval(changeLifeLevel, 100)
+}
+
+function stop() {
+    stopTimer();
+    postGame();
+    clearInterval(progressTimer);
 }
 
 setPhrase();

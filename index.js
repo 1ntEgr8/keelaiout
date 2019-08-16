@@ -1,6 +1,13 @@
-const battleground = document.getElementById("battleground");
+const battleground = document.getElementById("battleground"),
+      keyMapping = document.getElementById("key-mapping");
 let isShift = false,
-    oldLen = 0;
+    oldLen = 0
+    currentMapping = "DVORAK";
+
+const acceptedMappings = [
+    "DVORAK",
+    "COLEMAK"
+];
 
 // QWERTY to DVORAK key mappings
 const QWERTYTODVORAK = {
@@ -77,20 +84,28 @@ const QWERTYTOCOLEMAK = {
 
 battleground.addEventListener("input", (e) => {
     if (!gameStart) {
+        currentMapping = acceptedMappings[Math.floor(Math.random() * acceptedMappings.length)];
+        changeKeyMappingText(currentMapping);
+        start();
         startTimer();
         gameStart = true;
+    }
+    if (livesLeft == 0) {
+        return;
     }
     let textContent = e.target.value,
         characterTyped = textContent[textContent.length - 1];
     if (oldLen < textContent.length) {
-        const newChar = mapToLayout(characterTyped, "DVORAK");
+        const newChar = mapToLayout(characterTyped, currentMapping);
         e.target.value = textContent.substring(0, textContent.length - 1) + newChar;
     }
     oldLen = textContent.length;
     checkAnswer(e.target.value);
     if (isGameOver()) {
+        currentMapping = acceptedMappings[Math.floor(Math.random() * acceptedMappings.length)];
         gameStart = false;
-        reset();
+        changeKeyMappingText("");
+        stop();
     }
 })
 
@@ -135,3 +150,11 @@ function mapToLayout(c, to) {
 function clearBattleground() {
     battleground.value = "";
 }
+
+function changeKeyMappingText(s) {
+    keyMapping.innerHTML = s;
+}
+
+/*
+    the last part is to add the lives feature, and you will be done!!!!
+*/
