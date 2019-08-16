@@ -1,3 +1,5 @@
+// TODOS: fix scoring system issues
+
 const prompt = document.getElementById("prompt"), // the phrase that needs to be typed
       score = document.getElementById("score"), 
       restart = document.getElementById("restart"),
@@ -9,8 +11,9 @@ const prompt = document.getElementById("prompt"), // the phrase that needs to be
     Changing these variables will alter the scoring system and difficulty of the game
 */
 const MAXPOINTS = 100,
-      INCREMENT = 10,
-      LEVEL_DECREMENT = 10, // increase to make the game harder
+      MAX_DISTANCE_BTW_LETTERS = 15,
+      POINTS_STEP = 10;
+      LEVEL_DECREMENT = 2, // increase to make the game harder
       LIVES_MULTIPLIER = 100,
       NO_OF_LIVES = hearts.children.length; // DONT CHANGE THIS WITHOUT ADDING MORE HEARTS IN INDEX.HTML
 
@@ -42,6 +45,9 @@ restart.addEventListener("click", () => {
     gives three new lives
 */
 function reset() {
+    if (gameStart) {
+        stop();
+    }
     clearBattleground()
     updateScore(0);
     resetTimer();
@@ -72,7 +78,7 @@ function checkAnswer(ans) {
         updateScore(0);
     }
     if (ans.length > phrase.length) {
-        points -= (INCREMENT * (ans.length - phrase.length));
+        points -= (POINTS_STEP * (ans.length - phrase.length));
         updateScore(points);
         return;
     }
@@ -91,11 +97,12 @@ function checkAnswer(ans) {
 // calculates the points to be awarded on a character by character basis
 // would like to move the business logic of updating points in checkAnswer() to here
 function calculatePoints(response, correctAnswer) {
-    let diff = response.charCodeAt(0) - correctAnswer.charCodeAt(0);
-    for (let i = MAXPOINTS; i >= 0; i-=INCREMENT) {
-        if (Math.abs(diff) <= (MAXPOINTS - i)) {
-            changeLifeLevel(i);
-            return i;
+    let diff = Math.abs(response.charCodeAt(0) - correctAnswer.charCodeAt(0));
+    for (let i = 0; i < MAX_DISTANCE_BTW_LETTERS; i++) {
+        if (diff == i) {
+            let points = Math.abs(MAXPOINTS - POINTS_STEP * i);
+            changeLifeLevel(points);
+            return (points);
         }
     }
     return 0;
