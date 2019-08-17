@@ -10,12 +10,15 @@ let isShift = false, // used to decide if key combo characters need to be displa
 // ALSO UPDATE THE SWITCH STATEMENT IN changeKeyMapping()
 const acceptedMappings = [
     "DVORAK",
-    "COLEMAK"
+    "COLEMAK",
+    "WORKMAN"
 ];
 
 /* ======== KEY MAPPINGS START ======== */
 // consider moving these to another file
 // FOLLOW THE SAME FORMAT AS THE OTHER MAPPINGS WHEN CREATING A NEW ONE
+// UPDATE acceptedMappings IF YOU ADD NEW MAPPINGS TO THE GAME
+// ALSO UPDATE THE SWITCH STATEMENT IN changeKeyMapping()
 
 // QWERTY to DVORAK key mappings
 const QWERTYTODVORAK = {
@@ -88,6 +91,31 @@ const QWERTYTOCOLEMAK = {
     ";": "o",
     ":": "O",
     "n": "k"
+}
+
+// QWERTY TO WORKMAN key mappings
+const QWERTYTOWORKMAN = {
+    "w": "d",
+    "e": "r",
+    "r": "w",
+    "t": "b",
+    "y": "j",
+    "u": "f",
+    "i": "p",
+    "o": ";",
+    "specialo": ":",
+    "d": "h",
+    "f": "t",
+    "h": "y",
+    "j": "n",
+    "k": "e",
+    ";": "o",
+    ":": "O",
+    "c": "m",
+    "v": "c",
+    "b": "v",
+    "n": "k",
+    "m": "l"
 }
 /* ======== KEY MAPPINGS END ======== */
 
@@ -169,6 +197,7 @@ function changeKeyMapping(to) {
     switch(to) {
         case "DVORAK": currentMapping = QWERTYTODVORAK; break;
         case "COLEMAK": currentMapping = QWERTYTOCOLEMAK; break;
+        case "WORKMAN": currentMapping = QWERTYTOWORKMAN; break;
         default: {console.error(`QWERTY to ${to} has not been added as a case in the switch statment or isn't supported yet`); return;};
     }
 }
