@@ -5,7 +5,8 @@ const prompt = document.getElementById("prompt"), // the phrase that needs to be
       restart = document.getElementById("restart"),
       gameText = document.getElementById("game-text"), // game over text div
       hearts = document.getElementById("hearts"),
-      level = document.getElementById("level"); // progress bar
+      level = document.getElementById("level"), // progress bar
+      keyMappingHint = document.getElementById("key-mapping"); 
 
 /*
     Changing these variables will alter the scoring system and difficulty of the game
@@ -52,6 +53,7 @@ function reset() {
     updateScore(0);
     resetTimer();
     resetHearts();
+    keyMappingHint.innerHTML = "";
     gameStart = false;
 }
 
