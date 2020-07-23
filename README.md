@@ -3,4 +3,4 @@
 
 So, do you know your DVORAK, COLEBAK, and QWERTY?
 
-[game](https://1ntegr8-keelaiout.glitch.me/)
+🕹️ [play the game](https://1ntegr8-keelaiout.glitch.me/)
